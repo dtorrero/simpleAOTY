@@ -629,5 +629,13 @@ app.get('/tokens/:username/:status', authenticateAdminToken, (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on Port: ${PORT}`);
+});
+
+process.on('SIGINT', () => {
+    console.log('Received SIGINT. Closing server...');
+    server.close(() => {
+        console.log('Server closed. Exiting process...');
+        process.exit(0);
+    });
 });
