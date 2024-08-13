@@ -628,7 +628,7 @@ app.get('/tokens/:username/:status', authenticateAdminToken, (req, res) => {
 
 
 // Start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running on Port: ${PORT}`);
 });
 
