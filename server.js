@@ -78,6 +78,24 @@ app.get('/users/:username', authenticateAdminToken, (req, res) => {
     });
 });
 
+// Search in users 
+
+app.post('/users/search/:username', authenticateAdminToken, (req, res) => {
+    const { username } = req.body;
+
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+    }
+
+    // Use parameterized query to prevent SQL injection
+    db.all('SELECT * FROM users WHERE username LIKE ?', [`%${username}%`], (err, rows) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        res.json(rows);
+    });
+});
+
 // Route to remove a user by username
 app.delete('/users/:username', authenticateRAdminToken, (req, res) => {
     const { username } = req.body;
