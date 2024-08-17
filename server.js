@@ -28,7 +28,7 @@ const { authenticateRAdminToken, authenticateAdminToken, authenticateToken } = r
 const crypto = require('crypto');
 
 // Create a new user (with hashed pass)
-app.post('/users', async (req, res) => {
+app.post('/users/:username', authenticateRAdminToken, async (req, res) => {
     const { username, password, albums } = req.body;
 
     // Input validation
@@ -69,7 +69,7 @@ app.post('/users', async (req, res) => {
 
 // User stuff ===
 // Get all users
-app.get('/users', (req, res) => {
+app.get('/users/:username', authenticateAdminToken, (req, res) => {
     db.all('SELECT * FROM users', [], (err, rows) => {
         if (err) {
             return res.status(400).json({ error: err.message });
@@ -79,7 +79,7 @@ app.get('/users', (req, res) => {
 });
 
 // Route to remove a user by username
-app.delete('/users', (req, res) => {
+app.delete('/users/:username', authenticateRAdminToken, (req, res) => {
     const { username } = req.body;
 
     if (!username) {
@@ -412,7 +412,7 @@ app.get('/albums', (req, res) => {
 });
 
 // DELETE route to remove an album by albumID
-app.delete('/albums/:albumID', (req, res) => {
+/* app.delete('/albums/:albumID', (req, res) => {
     const albumID = req.params.albumID;
 
     db.run(`DELETE FROM albums WHERE albumID = ?`, [albumID], function (err) {
@@ -424,7 +424,7 @@ app.delete('/albums/:albumID', (req, res) => {
         }
         res.status(200).json({ message: 'Album deleted successfully' });
     });
-});
+}); */
 
 // User login Stuff
 // Login check user/pass and return token and role (for display purposses)
